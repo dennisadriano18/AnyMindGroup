@@ -1,0 +1,26 @@
+type PaymentInfo {
+	id: ID!
+    customerId: String!
+	price: Int
+	priceModifier: Int
+	dateTime: String
+	paymentMethod: String
+}
+
+# Root
+type Query {
+	paymentInfo: [PaymentInfo]
+}
+
+# Root
+type Mutation {
+	createPaymentInfo(paymentInfoInput: PaymentInfoInput): PaymentInfo!
+}
+
+input PaymentInfoInput {
+    customerId: String!
+    price: Int
+    priceModifier: Int
+    dateTime: String
+    paymentMethod: String
+}
