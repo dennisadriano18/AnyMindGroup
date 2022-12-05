@@ -1,0 +1,43 @@
+# Root
+type Query {
+	paymentRequest: [PaymentResponse]
+    findByDate(searchRequest: SearchRequest): [SearchResponse]
+}
+
+input SearchRequest {
+    startDateTime: String!
+    endDateTime: String!
+}
+
+type SearchResponse{
+    datetime: String
+    sales: String
+    points: String
+}
+
+# Root
+type Mutation {
+	insertPaymentRecord(paymentRequest: PaymentRequest): PaymentResponse
+}
+
+input PaymentRequest {
+    customerId: String!
+    price: Float!
+    priceModifier: Float
+    dateTime: String
+    paymentMethod: String!
+    additionalItem: AdditionalItem
+}
+
+input AdditionalItem {
+    last_4: String
+    courier: String
+    bankName: String
+    checkNo: String
+    acctNo: String
+}
+
+type PaymentResponse{
+    finalPrice: Float
+    points: Float
+}
