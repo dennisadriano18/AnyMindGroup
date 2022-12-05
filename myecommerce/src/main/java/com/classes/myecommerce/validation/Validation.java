@@ -1,23 +1,40 @@
 package com.classes.myecommerce.validation;
 
-import antlr.StringUtils;
 import com.classes.myecommerce.Exception.*;
+import com.classes.myecommerce.controller.PaymentInfoController;
 import com.classes.myecommerce.model.PaymentInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Validation {
+    private static Logger logger = LogManager.getLogger(Validation.class);
+    private final List<String> ACCEPTABLE_PAYMENT_METHODS = Arrays.asList("CASH",
+            "CASH_ON_DELIVERY",
+            "VISA",
+            "MASTERCARD",
+            "AMEX",
+            "JCB",
+            "PAYPAY",
+            "LINE PAY",
+            "POINTS",
+            "GRAB PAY",
+            "BANK TRANSFER",
+            "CHEQUE");
     private PaymentInfo paymentInfo;
 
     public Validation(PaymentInfo paymentInfo){
         this.paymentInfo = paymentInfo;
+        logger.info("Starting payment method validation...");
+        this.validatePaymentMethod();
+        logger.info("Starting additional items validation...");
         this.validateAdditionalItems();
-        if(paymentInfo.getPriceModifier() == null){
+        if(paymentInfo.getPriceModifier() != null){
+            logger.info("Starting price modifier validation...");
             validatePriceModifier();
         }
     }
@@ -59,6 +76,11 @@ public class Validation {
         }
     }
 
+    public void validatePaymentMethod(){
+        if(!this.ACCEPTABLE_PAYMENT_METHODS.contains(paymentInfo.getPaymentMethod())){
+            throw new InvalidPaymentMethod("Invalid Payment Method");
+        }
+    }
     public void validatePriceModifier(){
         BigDecimal min = roundToTwoDecimal(1.0);
         BigDecimal max = roundToTwoDecimal(1.0);
