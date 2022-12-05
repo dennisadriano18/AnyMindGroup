@@ -1,26 +1,43 @@
-type PaymentInfo {
-	id: ID!
-    customerId: String!
-	price: Int
-	priceModifier: Int
-	dateTime: String
-	paymentMethod: String
-}
-
 # Root
 type Query {
-	paymentInfo: [PaymentInfo]
+	paymentRequest: [PaymentResponse]
+    findByDate(searchRequest: SearchRequest): [SearchResponse]
+}
+
+input SearchRequest {
+    startDateTime: String!
+    endDateTime: String!
+}
+
+type SearchResponse{
+    datetime: String
+    sales: String
+    points: String
 }
 
 # Root
 type Mutation {
-	createPaymentInfo(paymentInfoInput: PaymentInfoInput): PaymentInfo!
+	insertPaymentRecord(paymentRequest: PaymentRequest): PaymentResponse
 }
 
-input PaymentInfoInput {
+input PaymentRequest {
     customerId: String!
-    price: Int
-    priceModifier: Int
+    price: Float!
+    priceModifier: Float
     dateTime: String
-    paymentMethod: String
+    paymentMethod: String!
+    additionalItem: AdditionalItem
+}
+
+input AdditionalItem {
+    last_4: String
+    courier: String
+    bankName: String
+    checkNo: String
+    acctNo: String
+}
+
+type PaymentResponse{
+    finalPrice: Float
+    points: Float
 }
