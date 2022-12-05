@@ -19,6 +19,8 @@ public class GraphQLExceptionHandler extends DataFetcherExceptionResolverAdapter
             return toGraphQLError(ex);
         }else if(ex.getClass().equals(InvalidPriceModifier.class)){
             return toGraphQLError(ex);
+        }else if(ex.getClass().equals(InvalidPaymentMethod.class)){
+            return toGraphQLError(ex);
         }else {
             return super.resolveToSingleError(ex, env);
         }
