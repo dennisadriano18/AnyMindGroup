@@ -4,6 +4,7 @@ import com.classes.myecommerce.model.PaymentInfo;
 import org.aspectj.apache.bcel.classfile.Utility;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class UtilityService {
 
@@ -14,7 +15,9 @@ public class UtilityService {
     }
 
     public BigDecimal computeFinalPrice(){
-        return paymentInfo.getPriceModifier() == null? paymentInfo.getPrice() : paymentInfo.getPrice().multiply( paymentInfo.getPriceModifier());
+        return paymentInfo.getPriceModifier() == null?
+                paymentInfo.getPrice().setScale(2, RoundingMode.HALF_UP) :
+                paymentInfo.getPrice().multiply( paymentInfo.getPriceModifier()).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal computePoints(){
@@ -24,24 +27,28 @@ public class UtilityService {
             case "CASH":
             case "JCB":
             case "CASH_ON_DELIVERY":
-                pointsModifier = new BigDecimal(0.05);
+                pointsModifier = roundToTwoDecimal(0.05);
                 break;
             case "VISA":
             case "MASTERCARD":
-                pointsModifier = new BigDecimal(0.03);
+                pointsModifier = roundToTwoDecimal(0.03);
                 break;
             case "AMEX":
-                pointsModifier = new BigDecimal(0.02);
+                pointsModifier = roundToTwoDecimal(0.02);
                 break;
             case "LINE PAY":
             case "GRAB PAY":
             case "PAYPAY":
-                pointsModifier = new BigDecimal(0.01);
+                pointsModifier = roundToTwoDecimal(0.01);
                 break;
             default:
-                pointsModifier = new BigDecimal(0.0);
+                pointsModifier = roundToTwoDecimal(0.0);
                 break;
         }
         return totalPoints = paymentInfo.getPrice().multiply(pointsModifier);
+    }
+
+    private BigDecimal roundToTwoDecimal(double value){
+        return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
     }
 }

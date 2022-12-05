@@ -1,9 +1,6 @@
 package com.classes.myecommerce.model;
 
 public class AdditionalItem {
-
-    private Long id;
-    private PaymentInfo paymentInfo;
     private String last_4;
     private String bankName;
     private String acctNo;
@@ -48,13 +45,5 @@ public class AdditionalItem {
 
     public void setCourier(String courier) {
         this.courier = courier;
-    }
-
-    public PaymentInfo getPaymentInfo() {
-        return paymentInfo;
-    }
-
-    public void setPaymentInfo(PaymentInfo paymentInfo) {
-        this.paymentInfo = paymentInfo;
     }
 }
